@@ -1,0 +1,54 @@
+SQL Codes
+
+Q1- What are the most 10 popular music genre based on total amounts of sold tracks and count of sold tracks?
+
+SELECT Genre.Name,
+SUM(InvoiceLine.UnitPrice*InvoiceLine.Quantity) AS Sum_Amounts,
+Count(InvoiceLine.Quantity) AS Quantity
+FROM Track 
+JOIN Genre ON Track.GenreId = Genre.GenreId
+JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId
+GROUP BY 1
+ORDER BY 2 DESC 
+LIMIT 10
+
+____________________________________________________________________________________________________________
+
+Q2- Which country made the most sales in Rock music?
+
+SELECT BillingCountry,
+SUM(InvoiceLine.UnitPrice*InvoiceLine.Quantity) AS Sum_Amounts
+FROM Track 
+JOIN Genre ON Track.GenreId = Genre.GenreId
+JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId
+JOIN Invoice ON InvoiceLine.InvoiceId = Invoice.InvoiceId
+WHERE Genre.Name = 'Rock'
+GROUP BY 1
+ORDER BY 2 DESC 
+LIMIT 5
+____________________________________________________________________________________________________________
+
+Q3- What are the most 10 artists in amount of sold music tracks?
+
+SELECT Artist.Name AS Artist_Name,
+SUM(InvoiceLine.UnitPrice*InvoiceLine.Quantity) AS Sum_Amounts
+FROM Artist
+JOIN Album ON Artist.ArtistId = Album.ArtistId
+JOIN Track ON Track.AlbumId = Album.AlbumId
+JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 10
+____________________________________________________________________________________________________________
+
+Q4- Which customer from the USA purchased the most?
+
+SELECT FirstName || ' ' || LastName AS Customer_Name,
+SUM(InvoiceLine.UnitPrice*InvoiceLine.Quantity) AS Sum_Amounts
+FROM InvoiceLine 
+JOIN Invoice ON InvoiceLine.InvoiceId = Invoice.InvoiceId
+JOIN Customer ON Customer.CustomerId = Invoice.CustomerId
+WHERE BillingCountry = 'USA'
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 10
